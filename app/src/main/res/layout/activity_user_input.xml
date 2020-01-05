@@ -6,10 +6,20 @@
     tools:context=".UserInput">
 
     <Button
+        android:id="@+id/button_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pick_date_str"
         android:onClick="showDatePickerDialog"
         android:layout_centerInParent="true"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_date"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/text_manual"
+        android:textAlignment="center"
+        android:textStyle="italic" />
 </RelativeLayout>

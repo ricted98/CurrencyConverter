@@ -6,4 +6,10 @@
     <string name="button_converter">Convert</string>
     <string name="edit_in">Input the amount to convert</string>
     <string name="edit_out">Converted amount</string>
+    <string name="text_manual">This app will convert currencies\nusing the exchange rate provided by ecb,\n
+        if you have to convert your money with a rate\n of days before you can pick any working day\n clicking the button Pick date\n \n
+        in the next view you will select your currencies\nand insert the amount of money, click the button Convert\n the result will appear below\n
+        the arrow button is provided to switch the selected currencies\n \n
+        in case of no internet the app will use\nan old version downloaded days before
+    </string>
 </resources>
