@@ -41,10 +41,10 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    File path = null;
     File fileToParse = null;
+    boolean connectionAvailable;
     final String NAME = "fileToParse.xml";
+    private String dateToUse = "2019-12-18";
     private final String ECBURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
     private final int NUM_RATES = 32; // There are 32 exchange rates in the file
     // Final ArrayList size will be 33 since we added EUR currency manually
@@ -58,7 +58,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DownloadChecker();
+        fileToParse = new File(getFilesDir(), NAME);
+        connectionAvailable = DownloadChecker();
+        if (connectionAvailable) {
+            dateToUse = getIntent().getStringExtra("UserDate");
+            new DownloadFileFromURL().execute(ECBURL);
+        } else {
+            try {
+                ratesList = Parser(fileToParse, dateToUse);
+                Spinners(ratesList);
+            } catch (XmlPullParserException | IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -69,8 +81,9 @@ public class MainActivity extends AppCompatActivity {
         XmlPullParser xpp = factory.newPullParser();
         // StringBuilder can be used to debug
         //StringBuilder sb = new StringBuilder();
+        boolean useDefaultDate = !connectionAvailable;
 
-        if (fileToParse == null) {
+        if (!(file.exists() && file.length() != 0)) {
             xpp.setInput(getResources().openRawResource(R.raw.eurofxref), null);
         } else {
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -84,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 int attributeCount = xpp.getAttributeCount();
                 if (attributeCount > 0) {
                     if (xpp.getAttributeName(0).equals("time")
-                            && xpp.getAttributeValue(0).equals(date)) {
+                            && (xpp.getAttributeValue(0).equals(date) || useDefaultDate)) {
                         int i = 0;
                         while (i < NUM_RATES) {
                             eventType = xpp.next();
@@ -114,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean DownloadChecker() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        path = getFilesDir();
-        fileToParse = new File(path, NAME);
+        // path = getFilesDir();
+        // fileToParse = new File(path, NAME);
         if (connMgr != null) {
             NetworkInfo networkinfo = connMgr.getActiveNetworkInfo();
             if (networkinfo != null && networkinfo.isConnected()) {
-                new DownloadFileFromURL().execute(ECBURL);
+                //new DownloadFileFromURL().execute(ECBURL);
                 Toast.makeText(getApplicationContext(), "Downloaded updated values"
                         , Toast.LENGTH_LONG).show();
                 return true;
@@ -136,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... urls) {
             try {
-                if(downloadFile(urls[0])) {
+                if (downloadFile(urls[0])) {
                     return "Downloaded updated values";
                 }
             } catch (IOException e) {
@@ -148,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String message) {
             try {
-                ratesList = Parser(fileToParse, getIntent().getStringExtra("UserDate"));
+                ratesList = Parser(fileToParse, dateToUse);
                 //lets call the spinner
                 Spinners(ratesList);
             } catch (XmlPullParserException | IOException e) {
@@ -204,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getSelected(View v){
+    public void getSelected(View v) {
         Rate rateIn = (Rate) spin.getSelectedItem();
         Rate rateOut = (Rate) spinn.getSelectedItem();
         String userInput = edit.getText().toString();
@@ -212,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         convert(rateIn, rateOut, money);
     }
 
-    public void convert(Rate rateIn, Rate rateOut, double inputValue){
+    public void convert(Rate rateIn, Rate rateOut, double inputValue) {
 
         double outputValue = rateOut.getExchangeRate() / rateIn.getExchangeRate() * inputValue;
         TextView editOut = findViewById(R.id.edit_out);
@@ -225,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
          */
     }
 
-    public void switchRates(View v){
+    public void switchRates(View v) {
         Rate rateIn = (Rate) spin.getSelectedItem();
         Rate rateOut = (Rate) spinn.getSelectedItem();
         spin.setSelection(ratesList.indexOf(rateOut));
