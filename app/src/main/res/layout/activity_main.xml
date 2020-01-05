@@ -13,10 +13,57 @@
         android:text="@string/app_name" />
 
     <TextView
-        android:id="@+id/text_view1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/title_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/title_text"
-        android:text="" />
+        android:text="@string/title_in"
+        android:layout_marginTop="150dp"/>
+
+    <EditText
+        android:id="@+id/edit_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_in"
+        android:hint="@string/edit_in"
+        android:inputType="number"/>
+
+    <Spinner
+        android:id="@+id/spinner_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_in" />
+
+    <TextView
+        android:id="@+id/title_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_in"
+        android:text="@string/title_out"
+        android:layout_marginTop="100dp"/>
+
+    <TextView
+        android:id="@+id/edit_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_out"
+        android:textSize="25sp"
+        android:hint="@string/edit_out"/>
+
+    <Spinner
+        android:id="@+id/spinner_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_out" />
+
+    <Button
+        android:id="@+id/button_converter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="@string/button_converter"
+        android:onClick="getSelected"/>
 
 </RelativeLayout>

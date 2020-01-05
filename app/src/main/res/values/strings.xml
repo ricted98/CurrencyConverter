@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">CurrencyConverter</string>
     <string name="pick_date_str">Pick date</string>
+    <string name="title_in">Your currency</string>
+    <string name="title_out">Your conversion</string>
+    <string name="button_converter">Convert</string>
+    <string name="edit_in">type in money</string>
+    <string name="edit_out">your out money</string>
 </resources>

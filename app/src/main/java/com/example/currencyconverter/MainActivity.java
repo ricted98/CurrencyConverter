@@ -12,7 +12,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     final String NAME = "fileToParse.xml";
     private final String ECBURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
     private final int NUM_RATES = 32; // There are 32 exchange rates
+    private Spinner spin;
+    private Spinner spinn;
+    private EditText edit;
 
 
     @Override
@@ -51,24 +59,6 @@ public class MainActivity extends AppCompatActivity {
         DownloadChecker();
     }
 
-    public class Rate {
-        private Currency currency;
-        private double exchangeRate;
-
-        private Rate(String ISO, double exchangeRate) {
-            this.currency = Currency.getInstance(ISO);
-            this.exchangeRate = exchangeRate;
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return String.format(Locale.getDefault(),
-                    "%s - %.2f", currency.getDisplayName(), exchangeRate);
-        }
-
-        // write methods when needed
-    }
 
     public void Parser(File file, String date) throws XmlPullParserException, IOException {
 
@@ -112,8 +102,11 @@ public class MainActivity extends AppCompatActivity {
         }
         sb.append("Total number: ");
         sb.append(rates.size());
-        TextView myTextView = findViewById(R.id.text_view1);
-        myTextView.setText(sb.toString());
+
+        //lets call the spinner
+        Spinners(rates);
+        //TextView myTextView = findViewById(R.id.text_view1);
+        //myTextView.setText(sb.toString());
 
     }
 
@@ -176,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         // Commented lines are exclusively for debugging
 
         input = conn.getInputStream();
-        int totalSize = conn.getContentLength();
+        //int totalSize = conn.getContentLength();
         // int downloadedSize = 0;
         byte[] buffer = new byte[1024];
         int bufferLength;
@@ -188,5 +181,39 @@ public class MainActivity extends AppCompatActivity {
         input.close();
         output.close();
         return true;
+    }
+
+    public void Spinners(ArrayList ratesList) {
+        edit = findViewById(R.id.edit_in);
+        spin = findViewById(R.id.spinner_in);
+        ArrayAdapter<Rate> adapterin = new ArrayAdapter<Rate>(this, android.R.layout.simple_spinner_item, ratesList);
+        adapterin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spin.setAdapter(adapterin);
+
+        spinn = findViewById(R.id.spinner_out);
+        ArrayAdapter<Rate> adapterout = new ArrayAdapter<Rate>(this, android.R.layout.simple_spinner_item, ratesList);
+        adapterout.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinn.setAdapter(adapterout);
+
+    }
+
+
+    public void getSelected(View v){
+        Rate rateIn = (Rate) spin.getSelectedItem();
+        Rate rateOut = (Rate) spinn.getSelectedItem();
+        double money = Float.parseFloat(edit.getText().toString());
+        makeConv(rateIn, rateOut, money);
+    }
+
+    public void makeConv(Rate rateIn, Rate rateOut, double money){
+
+        String choiceIn = rateIn.toString();
+        String choiceOut = rateOut.toString();
+
+
+
+        Toast.makeText(this, "you have " + choiceIn + "\nto " + choiceOut, Toast.LENGTH_LONG).show();
     }
 }
