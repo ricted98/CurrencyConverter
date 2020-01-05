@@ -10,15 +10,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="@string/app_name" />
+        android:text="@string/app_name"
+        android:textSize="40sp" />
 
     <TextView
         android:id="@+id/title_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_text"
-        android:text="@string/title_in"
-        android:layout_marginTop="150dp"/>
+        android:layout_marginTop="70dp"
+        android:text="@string/title_in" />
 
     <EditText
         android:id="@+id/edit_in"
@@ -26,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/spinner_in"
         android:hint="@string/edit_in"
-        android:inputType="number"/>
+        android:inputType="numberDecimal" />
 
     <Spinner
         android:id="@+id/spinner_in"
@@ -39,16 +40,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_in"
-        android:text="@string/title_out"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="100dp"
+        android:text="@string/title_out" />
 
     <TextView
         android:id="@+id/edit_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/spinner_out"
-        android:textSize="25sp"
-        android:hint="@string/edit_out"/>
+        android:hint="@string/edit_out"
+        android:textSize="25sp" />
 
     <Spinner
         android:id="@+id/spinner_out"
@@ -60,10 +61,23 @@
         android:id="@+id/button_converter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+        android:layout_below="@id/edit_out"
         android:layout_centerVertical="true"
-        android:text="@string/button_converter"
-        android:onClick="getSelected"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:onClick="getSelected"
+        android:text="@string/button_converter" />
+
+    <Button
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_in"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="⇅"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="36sp"
+        android:onClick="switchRates"/>
 
 </RelativeLayout>

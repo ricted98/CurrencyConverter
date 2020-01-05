@@ -46,10 +46,12 @@ public class MainActivity extends AppCompatActivity {
     File fileToParse = null;
     final String NAME = "fileToParse.xml";
     private final String ECBURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
-    private final int NUM_RATES = 32; // There are 32 exchange rates
+    private final int NUM_RATES = 32; // There are 32 exchange rates in the file
+    // Final ArrayList size will be 33 since we added EUR currency manually
     private Spinner spin;
     private Spinner spinn;
     private EditText edit;
+    ArrayList<Rate> ratesList;
 
 
     @Override
@@ -60,12 +62,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void Parser(File file, String date) throws XmlPullParserException, IOException {
+    public ArrayList<Rate> Parser(File file, String date) throws XmlPullParserException, IOException {
 
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser xpp = factory.newPullParser();
-        StringBuilder sb = new StringBuilder();
+        // StringBuilder can be used to debug
+        //StringBuilder sb = new StringBuilder();
 
         if (fileToParse == null) {
             xpp.setInput(getResources().openRawResource(R.raw.eurofxref), null);
@@ -89,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
                                 String ISOCode = xpp.getAttributeValue(0);
                                 double exchangeRate = Double.parseDouble(xpp.getAttributeValue(1));
                                 rates.add(new Rate(ISOCode, exchangeRate));
-                                sb.append(rates.get(i).toString());
-                                sb.append("\n");
+                                //sb.append(rates.get(i).toString());
+                                //sb.append("\n");
                                 i++;
                             }
                         }
@@ -100,13 +103,12 @@ public class MainActivity extends AppCompatActivity {
             }
             eventType = xpp.next();
         }
-        sb.append("Total number: ");
-        sb.append(rates.size());
-
-        //lets call the spinner
-        Spinners(rates);
+        //sb.append("Total number: ");
+        //sb.append(rates.size());
         //TextView myTextView = findViewById(R.id.text_view1);
         //myTextView.setText(sb.toString());
+        rates.add(0, new Rate("EUR", 1.0d));
+        return rates;
 
     }
 
@@ -146,7 +148,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String message) {
             try {
-                Parser(fileToParse, getIntent().getStringExtra("UserDate"));
+                ratesList = Parser(fileToParse, getIntent().getStringExtra("UserDate"));
+                //lets call the spinner
+                Spinners(ratesList);
             } catch (XmlPullParserException | IOException e) {
                 e.printStackTrace();
             }
@@ -203,17 +207,28 @@ public class MainActivity extends AppCompatActivity {
     public void getSelected(View v){
         Rate rateIn = (Rate) spin.getSelectedItem();
         Rate rateOut = (Rate) spinn.getSelectedItem();
-        double money = Float.parseFloat(edit.getText().toString());
-        makeConv(rateIn, rateOut, money);
+        String userInput = edit.getText().toString();
+        double money = userInput.equals("") ? 0 : Double.parseDouble(userInput);
+        convert(rateIn, rateOut, money);
     }
 
-    public void makeConv(Rate rateIn, Rate rateOut, double money){
+    public void convert(Rate rateIn, Rate rateOut, double inputValue){
 
-        String choiceIn = rateIn.toString();
+        double outputValue = rateOut.getExchangeRate() / rateIn.getExchangeRate() * inputValue;
+        TextView editOut = findViewById(R.id.edit_out);
+        editOut.setText(String.format("%.2f", outputValue));
+
+
+        /*String choiceIn = rateIn.toString();
         String choiceOut = rateOut.toString();
-
-
-
         Toast.makeText(this, "you have " + choiceIn + "\nto " + choiceOut, Toast.LENGTH_LONG).show();
+         */
+    }
+
+    public void switchRates(View v){
+        Rate rateIn = (Rate) spin.getSelectedItem();
+        Rate rateOut = (Rate) spinn.getSelectedItem();
+        spin.setSelection(ratesList.indexOf(rateOut));
+        spinn.setSelection(ratesList.indexOf(rateIn));
     }
 }
