@@ -37,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinIn;
     private Spinner spinOut;
     private EditText edit;
+    private boolean connectionAvailable;
     ArrayList<Rate> ratesList;
     File fileToParse = null;
-    boolean connectionAvailable;
 
     // Commented lines are exclusively for debugging
 
