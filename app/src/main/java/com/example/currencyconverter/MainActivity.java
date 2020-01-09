@@ -29,17 +29,17 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    File fileToParse = null;
-    boolean connectionAvailable;
     final String NAME = "fileToParse.xml";
-    private String dateToUse;
     final String ECB_URL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
     final int NUM_RATES = 32; // There are 32 exchange rates in the file
     // Final ArrayList size will be 33 since we added EUR currency manually
+    private String dateToUse;
     private Spinner spinIn;
     private Spinner spinOut;
     private EditText edit;
     ArrayList<Rate> ratesList;
+    File fileToParse = null;
+    boolean connectionAvailable;
 
     // Commented lines are exclusively for debugging
 
