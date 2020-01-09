@@ -1,15 +1,17 @@
 <resources>
-    <string name="app_name">CurrencyConverter</string>
+    <string name="app_name">Currency Converter</string>
     <string name="pick_date_str">Pick date</string>
-    <string name="title_in">Your currency</string>
-    <string name="title_out">Your conversion</string>
+    <string name="title_in">From</string>
+    <string name="title_out">To</string>
     <string name="button_converter">Convert</string>
-    <string name="edit_in">Input the amount to convert</string>
+    <string name="edit_in">Amount to convert</string>
     <string name="edit_out">Converted amount</string>
-    <string name="text_manual">This app will convert currencies\nusing the exchange rate provided by ecb,\n
-        if you have to convert your money with a rate\n of days before you can pick any working day\n clicking the button Pick date\n \n
-        in the next view you will select your currencies\nand insert the amount of money, click the button Convert\n the result will appear below\n
-        the arrow button is provided to switch the selected currencies\n \n
-        in case of no internet the app will use\nan old version downloaded days before
+    <string name="exchange_button">⇅</string>
+    <string name="text_manual">
+        This is a simple currency converter app.\n
+        Exchange rates are provided on a daily basis by the European Central Bank.\n
+        If you have available internet connection, you can pick a date up to 90 days before the current date.\n
+        If you are offline, the app will automatically search for the latest rates available on your phone.\n
+        Once you have chosen the date to use, you will be able to decide the currencies and the amount to convert.\n
     </string>
 </resources>

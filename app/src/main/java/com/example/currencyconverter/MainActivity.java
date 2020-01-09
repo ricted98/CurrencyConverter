@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     File fileToParse = null;
     boolean connectionAvailable;
     final String NAME = "fileToParse.xml";
-    private String dateToUse = "2019-12-18";
+    private String dateToUse;
     private final String ECBURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
     private final int NUM_RATES = 32; // There are 32 exchange rates in the file
     // Final ArrayList size will be 33 since we added EUR currency manually
@@ -137,29 +137,29 @@ public class MainActivity extends AppCompatActivity {
                         , Toast.LENGTH_LONG).show();
                 return true;
             } else {
-                Toast.makeText(getApplicationContext(), "Failed to download updated values\n Check your connection"
+                Toast.makeText(getApplicationContext(), "Failed to download updated values\nCheck your connection"
                         , Toast.LENGTH_LONG).show();
             }
         }
         return false;
     }
 
-    public class DownloadFileFromURL extends AsyncTask<String, String, String> {
+    public class DownloadFileFromURL extends AsyncTask<String, String, Boolean> {
 
         @Override
-        protected String doInBackground(String... urls) {
+        protected Boolean doInBackground(String... urls) {
             try {
                 if (downloadFile(urls[0])) {
-                    return "Downloaded updated values";
+                    return new Boolean(true);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return "Failed to download updated values\n Check your connection.";
+            return new Boolean(false);
         }
 
         @Override
-        protected void onPostExecute(String message) {
+        protected void onPostExecute(Boolean result) {
             try {
                 ratesList = Parser(fileToParse, dateToUse);
                 //lets call the spinner

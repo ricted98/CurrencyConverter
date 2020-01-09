@@ -75,7 +75,7 @@
         android:layout_below="@id/edit_in"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
-        android:text="⇅"
+        android:text="@string/exchange_button"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="36sp"
         android:onClick="switchRates"/>
