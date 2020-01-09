@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     boolean connectionAvailable;
     final String NAME = "fileToParse.xml";
     private String dateToUse;
-    private final String ECBURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
-    private final int NUM_RATES = 32; // There are 32 exchange rates in the file
+    final String ECB_URL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
+    final int NUM_RATES = 32; // There are 32 exchange rates in the file
     // Final ArrayList size will be 33 since we added EUR currency manually
     private Spinner spinIn;
     private Spinner spinOut;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         connectionAvailable = DownloadChecker();
         if (connectionAvailable) {
             dateToUse = getIntent().getStringExtra("UserDate");
-            new DownloadFileFromURL().execute(ECBURL);
+            new DownloadFileFromURL().execute(ECB_URL);
         } else {
             try {
                 ratesList = Parser(fileToParse, dateToUse);
@@ -203,6 +203,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void switchRates(View v) {
+        Rate rateIn = (Rate) spinIn.getSelectedItem();
+        Rate rateOut = (Rate) spinOut.getSelectedItem();
+        spinIn.setSelection(ratesList.indexOf(rateOut));
+        spinOut.setSelection(ratesList.indexOf(rateIn));
+    }
+
     public void getSelected(View v) {
         Rate rateIn = (Rate) spinIn.getSelectedItem();
         Rate rateOut = (Rate) spinOut.getSelectedItem();
@@ -217,17 +224,9 @@ public class MainActivity extends AppCompatActivity {
         TextView editOut = findViewById(R.id.edit_out);
         editOut.setText(String.format("%.2f", outputValue));
 
-
         /*String choiceIn = rateIn.toString();
         String choiceOut = rateOut.toString();
         Toast.makeText(this, "you have " + choiceIn + "\nto " + choiceOut, Toast.LENGTH_LONG).show();
          */
-    }
-
-    public void switchRates(View v) {
-        Rate rateIn = (Rate) spinIn.getSelectedItem();
-        Rate rateOut = (Rate) spinOut.getSelectedItem();
-        spinIn.setSelection(ratesList.indexOf(rateOut));
-        spinOut.setSelection(ratesList.indexOf(rateIn));
     }
 }
