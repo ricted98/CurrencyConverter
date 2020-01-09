@@ -2,21 +2,14 @@ package com.example.currencyconverter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +18,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import androidx.annotation.NonNull;
-
-import android.icu.util.Currency;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -36,8 +25,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
     private final String ECBURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml";
     private final int NUM_RATES = 32; // There are 32 exchange rates in the file
     // Final ArrayList size will be 33 since we added EUR currency manually
-    private Spinner spin;
-    private Spinner spinn;
+    private Spinner spinIn;
+    private Spinner spinOut;
     private EditText edit;
     ArrayList<Rate> ratesList;
 
+    // Commented lines are exclusively for debugging
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser xpp = factory.newPullParser();
-        // StringBuilder can be used to debug
         //StringBuilder sb = new StringBuilder();
         boolean useDefaultDate = !connectionAvailable;
 
@@ -183,8 +171,6 @@ public class MainActivity extends AppCompatActivity {
         conn.setDoInput(true);
         conn.connect();
 
-        // Commented lines are exclusively for debugging
-
         input = conn.getInputStream();
         //int totalSize = conn.getContentLength();
         // int downloadedSize = 0;
@@ -202,24 +188,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void Spinners(ArrayList ratesList) {
         edit = findViewById(R.id.edit_in);
-        spin = findViewById(R.id.spinner_in);
-        ArrayAdapter<Rate> adapterin = new ArrayAdapter<Rate>(this, android.R.layout.simple_spinner_item, ratesList);
-        adapterin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinIn = findViewById(R.id.spinner_in);
+        ArrayAdapter<Rate> adapterIn = new ArrayAdapter<Rate>(this, android.R.layout.simple_spinner_item, ratesList);
+        adapterIn.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spin.setAdapter(adapterin);
+        spinIn.setAdapter(adapterIn);
 
-        spinn = findViewById(R.id.spinner_out);
-        ArrayAdapter<Rate> adapterout = new ArrayAdapter<Rate>(this, android.R.layout.simple_spinner_item, ratesList);
-        adapterout.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinOut = findViewById(R.id.spinner_out);
+        ArrayAdapter<Rate> adapterOut = new ArrayAdapter<Rate>(this, android.R.layout.simple_spinner_item, ratesList);
+        adapterOut.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinn.setAdapter(adapterout);
+        spinOut.setAdapter(adapterOut);
 
     }
 
 
     public void getSelected(View v) {
-        Rate rateIn = (Rate) spin.getSelectedItem();
-        Rate rateOut = (Rate) spinn.getSelectedItem();
+        Rate rateIn = (Rate) spinIn.getSelectedItem();
+        Rate rateOut = (Rate) spinOut.getSelectedItem();
         String userInput = edit.getText().toString();
         double money = userInput.equals("") ? 0 : Double.parseDouble(userInput);
         convert(rateIn, rateOut, money);
@@ -239,9 +225,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void switchRates(View v) {
-        Rate rateIn = (Rate) spin.getSelectedItem();
-        Rate rateOut = (Rate) spinn.getSelectedItem();
-        spin.setSelection(ratesList.indexOf(rateOut));
-        spinn.setSelection(ratesList.indexOf(rateIn));
+        Rate rateIn = (Rate) spinIn.getSelectedItem();
+        Rate rateOut = (Rate) spinOut.getSelectedItem();
+        spinIn.setSelection(ratesList.indexOf(rateOut));
+        spinOut.setSelection(ratesList.indexOf(rateIn));
     }
 }

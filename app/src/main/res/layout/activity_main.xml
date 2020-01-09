@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/spinner_out"
         android:hint="@string/edit_out"
+        android:textColor="@color/colorAccent"
         android:textSize="25sp" />
 
     <Spinner
